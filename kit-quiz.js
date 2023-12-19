@@ -641,18 +641,27 @@ function optionSelected(e) {
     selections_made++;
 }
 
+function updateStreak() {
+    if (selections_made < 2) {
+        streak = -1;
+    }
+    selections_made = 0;
+    streak++;
+    document.getElementById("streak-tracker").innerHTML = "Streak: " + streak;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     nextWeapon();
-})
+
+    document.getElementById("next-button").addEventListener("click", function(e) {
+        updateStreak();
+        nextWeapon();
+    });
+});
 
 document.addEventListener("keyup", function(e) {
     if (e.code == "Space") {
-        if (selections_made < 2) {
-            streak = -1;
-        }
-        selections_made = 0;
-        streak++;
-        document.getElementById("streak-tracker").innerHTML = "Streak: " + streak;
+        updateStreak();
         nextWeapon();
     }
-})
+});
