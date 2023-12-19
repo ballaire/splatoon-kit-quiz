@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Splatoon 3 Kit Quiz</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="kit-quiz.js"></script>
+    <link rel="stylesheet" href="./splatoon-style.css">
+  </head>
+  <body>
+    <div id="quiz-container">
+        <div id="weapon-image" class="weapon-image-2d"></div>
+        <div id="weapon-name"></div>
+        <div id="sub-choices" class="multiple-choice"></div>
+        <div id="special-choices" class="multiple-choice"></div>
+        <div id="streak-tracker">Press space for next weapon</div>
+    </div>
+  </body>
+</html>
