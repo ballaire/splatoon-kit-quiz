@@ -4,10 +4,16 @@ const option_image_size = 64;
 const weapon_image_columns = 10;
 const sub_weapons = 14;
 const special_weapons = 19;
-const quiz_options = 6;
 var current_weapon;
 var streak = 0;
 var selections_made = 0;
+var settings = {
+    weapon_name_hidden: false,
+    sub_options_count: 6,
+    special_options_count: 6,
+    sub_options_random: true,
+    special_options_random: true
+};
 
 const weapons = [
     {
@@ -591,7 +597,34 @@ function randomSample(size, count, answer) {
     return result;
 }
 
+function populate_sub_options() {
+    let sub_options = randomSample(sub_weapons, settings.sub_options_count, current_weapon.sub);
+    if (!settings.sub_options_random) {
+        sub_options.sort();
+    }
+
+    let text = "";
+    for (let index = 0; index < sub_options.length; index++) {
+        text += `<span id="sub-option-${sub_options[index]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-position: -${sub_options[index] * option_image_size}px"></span>`
+    }
+    document.getElementById("sub-options").innerHTML = text;
+}
+
+function populate_special_options() {
+    let special_options = randomSample(special_weapons, settings.special_options_count, current_weapon.special);
+    if (!settings.special_options_random) {
+        special_options.sort();
+    }
+
+    let text = "";
+    for (let index = 0; index < special_options.length; index++) {
+        text += `<span id="special-option-${special_options[index]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${special_options[index] * option_image_size}px"></span>`
+    }
+    document.getElementById("special-options").innerHTML = text;
+}
+
 function nextWeapon() {
+    hideSettings();
     let weapon_index = randomInt(0, weapons.length - 1);
     
     let row = Math.floor(weapon_index / weapon_image_columns);
@@ -601,24 +634,12 @@ function nextWeapon() {
     current_weapon = weapons[weapon_index];
     document.getElementById("weapon-name").innerHTML = current_weapon.name;
 
-    let sub_options = randomSample(sub_weapons, quiz_options, current_weapon.sub);
-    let special_options = randomSample(special_weapons, quiz_options, current_weapon.special);
-
-    
-    let text = "";
-    for (let index = 0; index < sub_options.length; index++) {
-        text += `<span id="sub-option-${sub_options[index]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-position: -${sub_options[index] * option_image_size}px"></span>`
-    }
-    document.getElementById("sub-choices").innerHTML = text;
-
-    text = "";
-    for (let index = 0; index < special_options.length; index++) {
-        text += `<span id="special-option-${special_options[index]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${special_options[index] * option_image_size}px"></span>`
-    }
-    document.getElementById("special-choices").innerHTML = text;
+    populate_sub_options();
+    populate_special_options();
 }
 
 function optionSelected(e) {
+    hideSettings();
     let selection = e.target.id;
     let type = selection.split("-", 1)
     if (type == "sub") {
@@ -633,7 +654,7 @@ function optionSelected(e) {
         e.target.style["background-color"] = "#FF0000";
     }
     document.getElementById(correct_answer).style["background-color"] = "#00FF00";
-    document.getElementById(`${type}-choices`).childNodes.forEach(function(element) {
+    document.getElementById(`${type}-options`).childNodes.forEach(function(element) {
         element.classList.remove("quiz-option-open");
         element.classList.add("quiz-option-closed");
         element.removeAttribute("onclick");
@@ -650,18 +671,73 @@ function updateStreak() {
     document.getElementById("streak-tracker").innerHTML = "Streak: " + streak;
 }
 
+function toggleSettingsVisibility() {
+    var settings_elements = document.getElementsByClassName("settings")
+    for (let i = 0; i < settings_elements.length; i++) {
+        settings_elements[i].toggleAttribute("hidden");
+    }
+    let settings_button = document.getElementById("settings-button");
+    settings_button.innerHTML = (settings_button.innerHTML == "Settings") ? "Hide Settings" : "Settings";
+
+}
+
+function hideSettings() {
+    var settings_elements = document.getElementsByClassName("settings")
+    for (let i = 0; i < settings_elements.length; i++) {
+        settings_elements[i].setAttribute("hidden", true);
+    }
+    document.getElementById("settings-button").innerHTML = "Settings";
+}
+
+function loadSettings() {
+    document.getElementById("sub-options-count").value = settings.sub_options_count;
+    document.getElementById("special-options-count").value = settings.special_options_count;
+    document.getElementById("sub-options-random").checked = settings.sub_options_random;
+    document.getElementById("special-options-random").checked = settings.special_options_random;
+
+}
+
 document.addEventListener("DOMContentLoaded", function() {
+    loadSettings();
     nextWeapon();
 
     document.getElementById("next-button").addEventListener("click", function(e) {
         updateStreak();
         nextWeapon();
     });
-});
 
-document.addEventListener("keyup", function(e) {
-    if (e.code == "Space") {
-        updateStreak();
-        nextWeapon();
-    }
+    document.addEventListener("keyup", function(e) {
+        if (e.code == "Space") {
+            updateStreak();
+            nextWeapon();
+        }
+    });
+
+    document.getElementById("settings-button").addEventListener("click", toggleSettingsVisibility);
+
+    document.getElementById("weapon-name-setting").addEventListener("click", function(e) {
+        settings.weapon_name_hidden = !settings.weapon_name_hidden;
+        document.getElementById("weapon-name").classList.toggle("striked");
+        document.getElementById("weapon-name").classList.toggle("settings");
+    });
+
+    document.getElementById("sub-options-count").addEventListener("input", function(e) {
+        settings.sub_options_count = e.target.value;
+        populate_sub_options();
+    });
+
+    document.getElementById("sub-options-random").addEventListener("change", function(e) {
+        settings.sub_options_random = e.target.checked;
+        populate_sub_options();
+    });
+
+    document.getElementById("special-options-count").addEventListener("input", function(e) {
+        settings.special_options_count = e.target.value;
+        populate_special_options();
+    });
+
+    document.getElementById("special-options-random").addEventListener("change", function(e) {
+        settings.special_options_random = e.target.checked;
+        populate_special_options();
+    });
 });

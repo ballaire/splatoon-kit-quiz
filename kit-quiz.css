@@ -1,6 +1,19 @@
 
 body {
     background-color:#606060;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type=checkbox] {
+    margin-left: 20px;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+}
+
+input[type=number] {
+    width: 3em;
 }
 
 .weapon-image-2d {
@@ -21,7 +34,7 @@ body {
     justify-content: center;
     column-gap: 10px;
     row-gap: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .quiz-option {
@@ -47,35 +60,8 @@ body {
     background-image: url('img/specialweapons.png');
 }
 
-
-#quiz-container {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1600px;
-}
-
-#weapon-image {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#weapon-name {
-    font-size: 2em;
-    font-weight: bold;
-    color: white;
-}
-
-#streak-tracker {
-    font-size: 1.2em;
-    color: white;
-    margin-top: 20px;
-}
-
-#next-button {
-    font-size: 1.7em;
-    padding: 5px;
-    max-width: 200px;
+.button {
+    color: black;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -84,6 +70,65 @@ body {
     cursor: pointer;
 }
 
-#next-button:hover {
+.button:hover {
     background-color: #b0b0b0;
+}
+
+.block {
+    display: inline-block;
+    text-align: center;
+    position: relative;
+}
+
+.striked {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.options-settings {
+    margin-top: 5px;
+}
+
+#quiz-container {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#weapon-image {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#weapon-name-block {
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+}
+
+#next-button {
+    font-size: 1.7em;
+    padding: 5px;
+    max-width: 200px;
+}
+
+#streak-tracker {
+    font-size: 1.2em;
+    color: white;
+    margin-top: 10px;
+}
+
+#settings-button {
+    font-size: 1.2em;
+    padding: 5px;
+    max-width: 130px;
+}
+
+#weapon-name-setting {
+    font-size: 0.6em;
+    margin-left: 0.5em;
+    position: absolute;
+    left: 100%;
+    bottom: 10%;
+    padding: 0px 3px 0px 3px;
 }

@@ -5,16 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="kit-quiz.js"></script>
-    <link rel="stylesheet" href="./splatoon-style.css">
+    <script src="https://kit.fontawesome.com/0a307ae005.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="kit-quiz.css">
   </head>
   <body>
     <div id="quiz-container">
         <div id="weapon-image" class="weapon-image-2d"></div>
-        <div id="weapon-name"></div>
-        <div id="sub-choices" class="multiple-choice"></div>
-        <div id="special-choices" class="multiple-choice"></div>
-        <div id="next-button">Next Weapon</div>
+        <div id="weapon-name-block" class="block">
+          <span id="weapon-name"></span>
+          <span id="weapon-name-setting" class="settings button" hidden>
+            <i class="fa-regular fa-eye-slash"></i>
+          </span>
+        </div>
+        <div id="sub-options" class="multiple-choice"></div>
+        <div id="sub-options-settings" class="settings options-settings" hidden>
+          <input id="sub-options-count" class="counter" type="number" min="1" max="14">
+          Options
+          <input id="sub-options-random" type="checkbox">
+          Random Order
+        </div>
+        <div id="special-options" class="multiple-choice"></div>
+        <div id="special-options-settings" class="settings options-settings" hidden>
+          <input id="special-options-count" class="counter" type="number" min="1" max="19">
+          Options
+          <input id="special-options-random" type="checkbox">
+          Random Order
+        </div>
+        <div id="next-button" class="button">Next Weapon</div>
         <div id="streak-tracker">Streak: 0</div>
+        <div id="settings-button" class="button">Settings</div>
     </div>
   </body>
 </html>
