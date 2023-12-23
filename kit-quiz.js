@@ -464,7 +464,7 @@ const weapons = [
     {
         name: "Splatana Stamper",
         sub: 2,
-        special: 16
+        special: 18
     },
     {
         name: "Splatana Wiper",
