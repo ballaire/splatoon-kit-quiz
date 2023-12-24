@@ -12,7 +12,8 @@ var settings = {
     sub_options_count: 6,
     special_options_count: 6,
     sub_options_random: true,
-    special_options_random: true
+    special_options_random: true,
+    all_weapons_before_repeat: true
 };
 
 const weapons = [
@@ -568,6 +569,8 @@ const weapons = [
     }
 ];
 
+var unshown_weapons = [...Array(weapons.length).keys()];
+
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -625,8 +628,18 @@ function populate_special_options() {
 
 function nextWeapon() {
     hideSettings();
-    let weapon_index = randomInt(0, weapons.length - 1);
+
+    if (unshown_weapons.length == 0) {
+        unshown_weapons = [...Array(weapons.length).keys()];
+    }
     
+    if (settings.all_weapons_before_repeat) {
+        var weapon_index = unshown_weapons.splice(randomInt(0, unshown_weapons.length - 1), 1)[0];
+    }
+    else {
+        var weapon_index = randomInt(0, weapons.length - 1);
+    }
+
     let row = Math.floor(weapon_index / weapon_image_columns);
     let col = weapon_index % weapon_image_columns;
     document.getElementById("weapon-image").style.backgroundPosition = -col * weapon_image_size + "px " + -row * weapon_image_size + "px";
