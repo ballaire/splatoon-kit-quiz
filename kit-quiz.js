@@ -554,12 +554,12 @@ const weapons = [
         special: 18
     },
     {
-        name: "Z&F Splat Charger",
+        name: "Z+F Splat Charger",
         sub: 4,
         special: 13
     },
     {
-        name: "Z&F Splatterscope",
+        name: "Z+F Splatterscope",
         sub: 4,
         special: 13
     },
@@ -730,14 +730,14 @@ function cookieToSettings() {
 
 function settingsToCookie() {
     for (let setting_name in settings) {
-        document.cookie = setting_name + '=' + settings[setting_name] + ";path=/";
+        document.cookie = setting_name + '=' + settings[setting_name] + ";max-age=31536000;path=/";
     }
 }
 
 function changeSetting(setting_name, setting_value) {
     settings[setting_name] = setting_value;
     if (settings.cookies_accepted) {
-        document.cookie = setting_name + '=' + setting_value + ";path=/";
+        document.cookie = setting_name + '=' + setting_value + ";max-age=31536000;path=/";
     }
 }
 
