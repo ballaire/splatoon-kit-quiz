@@ -19,13 +19,13 @@ input[type=number] {
 .weapon-image-2d {
     width: 256px;
     height: 256px;
-    background-image: url('img/2dweapons.png');
+    background-image: url('../img/2dweapons.png');
 }
 
 .weapon-image-3d {
     width: 256px;
     height: 256px;
-    background-image: url('img/2dweapons.png');
+    background-image: url('../img/2dweapons.png');
 }
 
 .multiple-choice {
@@ -53,11 +53,11 @@ input[type=number] {
 }
 
 .sub-option {
-    background-image: url('img/subweapons.png');
+    background-image: url('../img/subweapons.png');
 }
 
 .special-option {
-    background-image: url('img/specialweapons.png');
+    background-image: url('../img/specialweapons.png');
 }
 
 .button {
