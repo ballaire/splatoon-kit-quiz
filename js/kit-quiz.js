@@ -329,7 +329,7 @@ const weapons = [
         special: 13
     },
     {
-        name: "Neo Splatana Stamper",
+        name: "Splatana Stamper Nouveau",
         sub: 11,
         special: 11
     },
