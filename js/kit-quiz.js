@@ -80,11 +80,12 @@ function randomProperty(obj) {
 
 function populateSubOptions() {
     let sub_options = randomSample(subs, settings.sub_options_count, current_weapon.sub);
+    console.log(sub_options);
 
     let text = "";
     for (let option in sub_options) {
-        let index = subs.indexOf(option);
-        text += `<span id="sub-option-${sub_options[option]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-position: -${option * option_image_size}px 0px")}"></span>`
+        let index = subs.indexOf(sub_options[option]);
+        text += `<span id="sub-option-${sub_options[option]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-position: -${index * option_image_size}px 0px")}"></span>`
     }
     document.getElementById("sub-options").innerHTML = text;
 }
@@ -94,7 +95,8 @@ function populateSpecialOptions() {
 
     let text = "";
     for (let option in special_options) {
-        text += `<span id="special-option-${special_options[option]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${option * option_image_size}px 0px"></span>`
+        let index = specials.indexOf(special_options[option]);
+        text += `<span id="special-option-${special_options[option]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${index * option_image_size}px 0px"></span>`
     }
     document.getElementById("special-options").innerHTML = text;
 }
