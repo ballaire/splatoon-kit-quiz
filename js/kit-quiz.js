@@ -1,3 +1,5 @@
+const weapon_image_size = 256;
+const option_image_size = 64;
 
 var settings = {
     language: 'English',
@@ -43,10 +45,6 @@ async function loadJsonData() {
     specials = subs_specials.specials;
 }
 
-function getImagePath(name) {
-    return `url(img/${name}.png)`
-}
-
 function getTranslation(category, entry) {
     return language_data[settings.language_ext][category][entry];
 }
@@ -85,7 +83,8 @@ function populateSubOptions() {
 
     let text = "";
     for (let option in sub_options) {
-        text += `<span id="sub-option-${sub_options[option]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-image: ${getImagePath(sub_options[option])}"></span>`
+        let index = subs.indexOf(option);
+        text += `<span id="sub-option-${sub_options[option]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-position: -${option * option_image_size}px 0px")}"></span>`
     }
     document.getElementById("sub-options").innerHTML = text;
 }
@@ -95,7 +94,7 @@ function populateSpecialOptions() {
 
     let text = "";
     for (let option in special_options) {
-        text += `<span id="special-option-${special_options[option]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-image: ${getImagePath(special_options[option])}"></span>`
+        text += `<span id="special-option-${special_options[option]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${option * option_image_size}px 0px"></span>`
     }
     document.getElementById("special-options").innerHTML = text;
 }
@@ -111,7 +110,7 @@ function nextWeapon() {
         delete weapon_pool[current_weapon.name];
     }
 
-    document.getElementById("weapon-image").style.backgroundImage = getImagePath(current_weapon.name);
+    document.getElementById("weapon-image").style.backgroundPositionX = `${-current_weapon.index * weapon_image_size}px`;
     document.getElementById("weapon-name").innerHTML = getTranslation('main', current_weapon.name);
 
     populateSubOptions();
