@@ -1,629 +1,101 @@
 
-const weapon_image_size = 256;
-const option_image_size = 64;
-const weapon_image_columns = 10;
-const sub_weapons = 14;
-const special_weapons = 19;
-var current_weapon;
-var streak = 0;
-var selections_made = 0;
 var settings = {
+    language: 'English',
+    language_ext: 'USen',
     weapon_name_hidden: false,
     sub_options_count: 6,
     special_options_count: 6,
-    sub_options_random: true,
-    special_options_random: true,
+    options_random_order: false,
     all_weapons_before_repeat: true,
     cookies_accepted: false
 };
 
-const weapons = [
-    {
-        name: ".52 Gal",
-        sub: 4,
-        special: 8
-    },
-    {
-        name: ".96 Gal",
-        sub: 3,
-        special: 7
-    },
-    {
-        name: ".96 Gal Deco",
-        sub: 4,
-        special: 16
-    },
-    {
-        name: "Aerospray MG",
-        sub: 5,
-        special: 12
-    },
-    {
-        name: "Aerospray RG",
-        sub: 3,
-        special: 5
-    },
-    {
-        name: "Annaki Splattershot Nova",
-        sub: 10,
-        special: 9
-    },
-    {
-        name: "Ballpoint Splatling",
-        sub: 5,
-        special: 9
-    },
-    {
-        name: "Ballpoint Splatling Nouveau",
-        sub: 10,
-        special: 7
-    },
-    {
-        name: "Bamboozler 14 Mk I",
-        sub: 7,
-        special: 8
-    },
-    {
-        name: "Big Swig Roller",
-        sub: 4,
-        special: 7
-    },
-    {
-        name: "Big Swig Roller Express",
-        sub: 12,
-        special: 4
-    },
-    {
-        name: "Blaster",
-        sub: 7,
-        special: 1
-    },
-    {
-        name: "Bloblobber",
-        sub: 3,
-        special: 4
-    },
-    {
-        name: "Bloblobber Deco",
-        sub: 12,
-        special: 16
-    },
-    {
-        name: "Carbon Roller",
-        sub: 7,
-        special: 2
-    },
-    {
-        name: "Carbon Roller Deco",
-        sub: 2,
-        special: 0
-    },
-    {
-        name: "Clash Blaster",
-        sub: 0,
-        special: 0
-    },
-    {
-        name: "Clash Blaster Neo",
-        sub: 6,
-        special: 15
-    },
-    {
-        name: "Classic Squiffer",
-        sub: 9,
-        special: 1
-    },
-    {
-        name: "Custom Blaster",
-        sub: 9,
-        special: 17
-    },
-    {
-        name: "Custom Dualie Squelchers",
-        sub: 8,
-        special: 15
-    },
-    {
-        name: "Custom Goo Tuber",
-        sub: 5,
-        special: 10
-    },
-    {
-        name: "Custom Jet Squelcher",
-        sub: 11,
-        special: 4
-    },
-    {
-        name: "Custom Splattershot Jr.",
-        sub: 13,
-        special: 6
-    },
-    {
-        name: "Dapple Dualies",
-        sub: 8,
-        special: 14
-    },
-    {
-        name: "Dapple Dualies Nouveau",
-        sub: 13,
-        special: 12
-    },
-    {
-        name: "Dark Tetra Dualies",
-        sub: 7,
-        special: 12
-    },
-    {
-        name: "Dread Wringer",
-        sub: 1,
-        special: 12
-    },
-    {
-        name: "Dualie Squelchers",
-        sub: 0,
-        special: 6
-    },
-    {
-        name: "Dynamo Roller",
-        sub: 3,
-        special: 14
-    },
-    {
-        name: "E-liter 4K",
-        sub: 10,
-        special: 6
-    },
-    {
-        name: "E-liter 4K Scope",
-        sub: 10,
-        special: 6
-    },
-    {
-        name: "Enperry Splat Dualies",
-        sub: 6,
-        special: 17
-    },
-    {
-        name: "Explosher",
-        sub: 9,
-        special: 4
-    },
-    {
-        name: "Flingza Roller",
-        sub: 10,
-        special: 3
-    },
-    {
-        name: "Foil Squeezer",
-        sub: 7,
-        special: 18
-    },
-    {
-        name: "Forge Splattershot Pro",
-        sub: 1,
-        special: 5
-    },
-    {
-        name: "Glooga Dualies",
-        sub: 4,
-        special: 5
-    },
-    {
-        name: "Goo Tuber",
-        sub: 13,
-        special: 3
-    },
-    {
-        name: "Gold Dynamo Roller",
-        sub: 0,
-        special: 15
-    },
-    {
-        name: "H-3 Nozzlenose",
-        sub: 9,
-        special: 14
-    },
-    {
-        name: "H-3 Nozzlenose D",
-        sub: 4,
-        special: 1
-    },
-    {
-        name: "Heavy Edit Splatling",
-        sub: 6,
-        special: 14
-    },
-    {
-        name: "Heavy Splatling",
-        sub: 3,
-        special: 6
-    },
-    {
-        name: "Heavy Splatling Deco",
-        sub: 9,
-        special: 16
-    },
-    {
-        name: "Hero Shot Replica",
-        sub: 1,
-        special: 0
-    },
-    {
-        name: "Hydra Splatling",
-        sub: 7,
-        special: 5
-    },
-    {
-        name: "Inkbrush",
-        sub: 0,
-        special: 8
-    },
-    {
-        name: "Inkbrush Nouveau",
-        sub: 10,
-        special: 10
-    },
-    {
-        name: "Inkline Tri-Stringer",
-        sub: 3,
-        special: 15
-    },
-    {
-        name: "Jet Squelcher",
-        sub: 12,
-        special: 7
-    },
-    {
-        name: "Krak-On Splat Roller",
-        sub: 8,
-        special: 16
-    },
-    {
-        name: "L-3 Nozzlenose",
-        sub: 6,
-        special: 11
-    },
-    {
-        name: "L-3 Nozzlenose D",
-        sub: 2,
-        special: 10
-    },
-    {
-        name: "Light Tetra Dualies",
-        sub: 3,
-        special: 2
-    },
-    {
-        name: "Luna Blaster",
-        sub: 0,
-        special: 2
-    },
-    {
-        name: "Luna Blaster Neo",
-        sub: 5,
-        special: 10
-    },
-    {
-        name: "Mini Splatling",
-        sub: 2,
-        special: 10
-    },
-    {
-        name: "N-ZAP '85",
-        sub: 1,
-        special: 14
-    },
-    {
-        name: "N-ZAP '89",
-        sub: 7,
-        special: 15
-    },
-    {
-        name: "Nautilus 47",
-        sub: 9,
-        special: 4
-    },
-    {
-        name: "Neo Splash-o-matic",
-        sub: 1,
-        special: 13
-    },
-    {
-        name: "Splatana Stamper Nouveau",
-        sub: 11,
-        special: 11
-    },
-    {
-        name: "Neo Sploosh-o-matic",
-        sub: 8,
-        special: 8
-    },
-    {
-        name: "Octobrush",
-        sub: 1,
-        special: 2
-    },
-    {
-        name: "Octobrush Nouveau",
-        sub: 8,
-        special: 4
-    },
-    {
-        name: "Painbrush",
-        sub: 6,
-        special: 6
-    },
-    {
-        name: "Painbrush Nouveau",
-        sub: 9,
-        special: 3
-    },
-    {
-        name: "Range Blaster",
-        sub: 1,
-        special: 6
-    },
-    {
-        name: "Rapid Blaster",
-        sub: 10,
-        special: 13
-    },
-    {
-        name: "Rapid Blaster Deco",
-        sub: 13,
-        special: 9
-    },
-    {
-        name: "Rapid Blaster Pro",
-        sub: 11,
-        special: 7
-    },
-    {
-        name: "Rapid Blaster Pro Deco",
-        sub: 12,
-        special: 8
-    },
-    {
-        name: "REEF-LUX 450",
-        sub: 6,
-        special: 3
-    },
-    {
-        name: "REEF-LUX 450 Deco",
-        sub: 4,
-        special: 12
-    },
-    {
-        name: "S-BLAST '91",
-        sub: 2,
-        special: 5
-    },
-    {
-        name: "S-BLAST '92",
-        sub: 3,
-        special: 12
-    },
-    {
-        name: "Slosher",
-        sub: 0,
-        special: 13
-    },
-    {
-        name: "Slosher Deco",
-        sub: 12,
-        special: 2
-    },
-    {
-        name: "Sloshing Machine",
-        sub: 5,
-        special: 5
-    },
-    {
-        name: "Sloshing Machine Neo",
-        sub: 9,
-        special: 0
-    },
-    {
-        name: "Snipewriter 5B",
-        sub: 4,
-        special: 4
-    },
-    {
-        name: "Snipewriter 5H",
-        sub: 3,
-        special: 14
-    },
-    {
-        name: "Sorella Brella",
-        sub: 7,
-        special: 9
-    },
-    {
-        name: "Splash-o-matic",
-        sub: 2,
-        special: 11
-    },
-    {
-        name: "Splat Brella",
-        sub: 3,
-        special: 13
-    },
-    {
-        name: "Splat Charger",
-        sub: 0,
-        special: 7
-    },
-    {
-        name: "Splat Dualies",
-        sub: 1,
-        special: 11
-    },
-    {
-        name: "Splat Roller",
-        sub: 6,
-        special: 1
-    },
-    {
-        name: "Splatana Stamper",
-        sub: 2,
-        special: 2
-    },
-    {
-        name: "Splatana Wiper",
-        sub: 13,
-        special: 10
-    },
-    {
-        name: "Splatana Wiper Deco",
-        sub: 8,
-        special: 3
-    },
-    {
-        name: "Splatterscope",
-        sub: 0,
-        special: 7
-    },
-    {
-        name: "Splattershot",
-        sub: 1,
-        special: 0
-    },
-    {
-        name: "Splattershot Jr.",
-        sub: 0,
-        special: 1
-    },
-    {
-        name: "Splattershot Nova",
-        sub: 9,
-        special: 8
-    },
-    {
-        name: "Splattershot Pro",
-        sub: 12,
-        special: 11
-    },
-    {
-        name: "Sploosh-o-matic",
-        sub: 6,
-        special: 10
-    },
-    {
-        name: "Squeezer",
-        sub: 4,
-        special: 0
-    },
-    {
-        name: "Tenta Brella",
-        sub: 8,
-        special: 7
-    },
-    {
-        name: "Tenta Sorella Brella",
-        sub: 10,
-        special: 0
-    },
-    {
-        name: "Tentatek Splattershot",
-        sub: 0,
-        special: 13
-    },
-    {
-        name: "Tri-Slosher",
-        sub: 11,
-        special: 9
-    },
-    {
-        name: "Tri-Slosher Nouveau",
-        sub: 5,
-        special: 14
-    },
-    {
-        name: "Tri-Stringer",
-        sub: 11,
-        special: 8
-    },
-    {
-        name: "Undercover Brella",
-        sub: 10,
-        special: 12
-    },
-    {
-        name: "Undercover Sorella Brella",
-        sub: 13,
-        special: 18
-    },
-    {
-        name: "Z+F Splat Charger",
-        sub: 4,
-        special: 13
-    },
-    {
-        name: "Z+F Splatterscope",
-        sub: 4,
-        special: 13
-    },
-    {
-        name: "Zink Mini Splatling",
-        sub: 11,
-        special: 1
-    }
-];
+var current_weapon;
+var streak = 0;
+var selections_made = 0;
+var weapon_pool = {};
 
-var unshown_weapons = [...Array(weapons.length).keys()];
+var languages;
+var language_data;
+var weapons;
+var mains;
+var subs;
+var specials;
+
+async function fetchJson(filename) {
+    try {
+        response = await fetch(filename);
+        json = await response.json();
+        return json;
+    }
+    catch (error) {
+        console.error("Error fetching json data:", error);
+    }
+}
+
+async function loadJsonData() {
+    languages = await fetchJson('data/languages.json');
+    language_data = await fetchJson('data/language_data.json');
+    weapons = await fetchJson('data/weapons.json');
+    let subs_specials = await fetchJson('data/subs_specials.json');
+    mains = Object.keys(weapons);
+    subs = subs_specials.subs;
+    specials = subs_specials.specials;
+}
+
+function getImagePath(name) {
+    return `url(img/${name}.png)`
+}
+
+function getTranslation(category, entry) {
+    return language_data[settings.language_ext][category][entry];
+}
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function randomSample(size, count, answer) {
-    if (count > size) {
-        count = size;
+function randomSample(array, sampleSize, answer) {
+    let pool = array.map((element, index) => ({element, index}));
+    answer = pool.find((e) => e.element == answer);
+    pool = pool.filter((element) => element != answer)
+
+    for (let i = pool.length - 1; i > 0; i--) {
+        let j = randomInt(0, i);
+        [pool[i], pool[j]] = [pool[j], pool[i]];
     }
 
-    // Make a pool of options, replacing the correct answer with the last option
-    let pool = [...Array(size - 1).keys()];
-    if (answer < pool.length) {
-        pool[answer] = pool.length;
-    }
-
-    // Get random options from the pool, removing them from the pool
-    let result = [];
-    for (let n = 0; n < count - 1; n++) {
-        index = Math.floor(Math.random() * (pool.length - n));
-        result.push(pool[index]);
-        pool[index] = pool[pool.length - n - 1];
-    }
-
-    // Insert the correct answer at a random index
+    let result = pool.slice(0, sampleSize - 1);
     result.splice(randomInt(0, result.length), 0, answer);
 
-    return result;
-}
-
-function populate_sub_options() {
-    let sub_options = randomSample(sub_weapons, settings.sub_options_count, current_weapon.sub);
-    if (!settings.sub_options_random) {
-        sub_options.sort(function(a, b) {return a - b});
-        console.log(sub_options);
+    if(!settings.options_random_order) {
+        result.sort(function(a, b) {return a.index - b.index});
     }
 
+    return result.map((e) => e.element);
+}
+
+function randomProperty(obj) {
+    let keys = Object.keys(obj);
+    return obj[keys[keys.length * Math.random() << 0]];
+}
+
+function populateSubOptions() {
+    let sub_options = randomSample(subs, settings.sub_options_count, current_weapon.sub);
+
     let text = "";
-    for (let index = 0; index < sub_options.length; index++) {
-        text += `<span id="sub-option-${sub_options[index]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-position: -${sub_options[index] * option_image_size}px"></span>`
+    for (let option in sub_options) {
+        text += `<span id="sub-option-${sub_options[option]}" class="quiz-option quiz-option-open sub-option" onclick="optionSelected(event)" style="background-image: ${getImagePath(sub_options[option])}"></span>`
     }
     document.getElementById("sub-options").innerHTML = text;
 }
 
-function populate_special_options() {
-    let special_options = randomSample(special_weapons, settings.special_options_count, current_weapon.special);
-    if (!settings.special_options_random) {
-        special_options.sort(function(a, b) {return a - b});
-    }
+function populateSpecialOptions() {
+    let special_options = randomSample(specials, settings.special_options_count, current_weapon.special);
 
     let text = "";
-    for (let index = 0; index < special_options.length; index++) {
-        text += `<span id="special-option-${special_options[index]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${special_options[index] * option_image_size}px"></span>`
+    for (let option in special_options) {
+        text += `<span id="special-option-${special_options[option]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-image: ${getImagePath(special_options[option])}"></span>`
     }
     document.getElementById("special-options").innerHTML = text;
 }
@@ -631,26 +103,19 @@ function populate_special_options() {
 function nextWeapon() {
     hideSettings();
 
-    if (unshown_weapons.length == 0) {
-        unshown_weapons = [...Array(weapons.length).keys()];
+    if (!settings.all_weapons_before_repeat || Object.keys(weapon_pool).length == 0) {
+        weapon_pool = Object.assign({}, weapons);
     }
-    
+    current_weapon = randomProperty(weapon_pool);
     if (settings.all_weapons_before_repeat) {
-        var weapon_index = unshown_weapons.splice(randomInt(0, unshown_weapons.length - 1), 1)[0];
-    }
-    else {
-        var weapon_index = randomInt(0, weapons.length - 1);
+        delete weapon_pool[current_weapon.name];
     }
 
-    let row = Math.floor(weapon_index / weapon_image_columns);
-    let col = weapon_index % weapon_image_columns;
-    document.getElementById("weapon-image").style.backgroundPosition = -col * weapon_image_size + "px " + -row * weapon_image_size + "px";
-    
-    current_weapon = weapons[weapon_index];
-    document.getElementById("weapon-name").innerHTML = current_weapon.name;
+    document.getElementById("weapon-image").style.backgroundImage = getImagePath(current_weapon.name);
+    document.getElementById("weapon-name").innerHTML = getTranslation('main', current_weapon.name);
 
-    populate_sub_options();
-    populate_special_options();
+    populateSubOptions();
+    populateSpecialOptions();
 }
 
 function optionSelected(e) {
@@ -687,13 +152,13 @@ function updateStreak() {
 }
 
 function toggleSettingsVisibility() {
+    //document.getElementById("settings-overlay").style.display = "block";
     var settings_elements = document.getElementsByClassName("settings")
     for (let i = 0; i < settings_elements.length; i++) {
         settings_elements[i].toggleAttribute("hidden");
     }
     let settings_button = document.getElementById("settings-button");
     settings_button.innerHTML = (settings_button.innerHTML == "Settings") ? "Hide Settings" : "Settings";
-
 }
 
 function hideSettings() {
@@ -707,8 +172,8 @@ function hideSettings() {
 function loadSettings() {
     document.getElementById("sub-options-count").value = settings.sub_options_count;
     document.getElementById("special-options-count").value = settings.special_options_count;
-    document.getElementById("sub-options-random").checked = settings.sub_options_random;
-    document.getElementById("special-options-random").checked = settings.special_options_random;
+    //document.getElementById("sub-options-random").checked = settings.sub_options_random;
+    //document.getElementById("special-options-random").checked = settings.special_options_random;
 }
 
 function cookieToSettings() {
@@ -721,7 +186,7 @@ function cookieToSettings() {
 
             if (setting_value === "true") setting_value = true;
             else if (setting_value === "false") setting_value = false;
-            else setting_value = parseInt(setting_value);
+            else if (!isNaN(setting_value)) setting_value = parseInt(setting_value);
 
             settings[setting_name] = setting_value;
         }
@@ -741,7 +206,8 @@ function changeSetting(setting_name, setting_value) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
+    await loadJsonData();
     cookieToSettings();
     loadSettings();
     nextWeapon();
@@ -772,23 +238,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById("sub-options-count").addEventListener("input", function(e) {
         changeSetting("sub_options_count", e.target.value);
-        populate_sub_options();
+        populateSubOptions();
     });
 
-    document.getElementById("sub-options-random").addEventListener("change", function(e) {
+    /*document.getElementById("sub-options-random").addEventListener("change", function(e) {
         changeSetting("sub_options_random", e.target.checked);
-        populate_sub_options();
-    });
+        populateSubOptions();
+    });*/
 
     document.getElementById("special-options-count").addEventListener("input", function(e) {
         changeSetting("special_options_count", e.target.value);
-        populate_special_options();
+        populateSpecialOptions();
     });
 
-    document.getElementById("special-options-random").addEventListener("change", function(e) {
+    /*document.getElementById("special-options-random").addEventListener("change", function(e) {
         changeSetting("special_options_random", e.target.checked);
-        populate_special_options();
-    });
+        populateSpecialOptions();
+    });*/
 
     document.getElementById("cookie-accept").addEventListener("click", function(e) {
         changeSetting("cookies_accepted", true);

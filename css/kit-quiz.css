@@ -16,18 +16,6 @@ input[type=number] {
     width: 3em;
 }
 
-.weapon-image-2d {
-    width: 256px;
-    height: 256px;
-    background-image: url('../img/2dweapons.png');
-}
-
-.weapon-image-3d {
-    width: 256px;
-    height: 256px;
-    background-image: url('../img/2dweapons.png');
-}
-
 .multiple-choice {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(64px, max-content));
@@ -42,6 +30,10 @@ input[type=number] {
     height: 64px;
     border-radius: 10px;
     background-color:#0BA979;
+    background-size: 64px;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 2px;
 }
 
 .quiz-option-open {
@@ -50,14 +42,6 @@ input[type=number] {
 
 .quiz-option-open:hover {
     background-color:#155040;
-}
-
-.sub-option {
-    background-image: url('../img/subweapons.png');
-}
-
-.special-option {
-    background-image: url('../img/specialweapons.png');
 }
 
 .button {
@@ -114,6 +98,8 @@ input[type=number] {
 #weapon-image {
     margin-left: auto;
     margin-right: auto;
+    width: 256px;
+    height: 256px;
 }
 
 #weapon-name-block {
@@ -147,4 +133,15 @@ input[type=number] {
     left: 100%;
     bottom: 10%;
     padding: 0px 3px 0px 3px;
+}
+
+#settings-overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }

@@ -11,7 +11,7 @@
   </head>
   <body>
     <div id="quiz-container">
-        <div id="weapon-image" class="weapon-image-2d"></div>
+        <div id="weapon-image"></div>
         <div id="weapon-name-block" class="block">
           <span id="weapon-name"></span>
           <span id="weapon-name-setting" class="settings button" hidden>
@@ -22,15 +22,11 @@
         <div id="sub-options-settings" class="settings options-settings" hidden>
           <input id="sub-options-count" class="counter" type="number" min="1" max="14">
           Options
-          <input id="sub-options-random" type="checkbox">
-          Random Order
         </div>
         <div id="special-options" class="multiple-choice"></div>
         <div id="special-options-settings" class="settings options-settings" hidden>
           <input id="special-options-count" class="counter" type="number" min="1" max="19">
           Options
-          <input id="special-options-random" type="checkbox">
-          Random Order
         </div>
         <div id="next-button" class="button">Next Weapon</div>
         <div id="streak-tracker">Streak: 0</div>
@@ -40,6 +36,9 @@
       This site uses cookies to remember your settings
       <span id="cookie-accept" class="bottom-button button">Fresh!</span>
       <span id="cookie-decline" class="bottom-button button">No Thanks!</span>
+    </div>
+    <div id="settings-overlay">
+      
     </div>
   </body>
 </html>
