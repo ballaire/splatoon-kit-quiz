@@ -210,6 +210,7 @@ function cookieToSettings() {
             }
         }
         if (!up_to_date) {
+            settings.cookies_accepted = true;
             return;
         }
     }
