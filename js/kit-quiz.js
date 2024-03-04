@@ -2,8 +2,9 @@ const weapon_image_size = 256;
 const option_image_size = 64;
 
 var settings = {
-    language: 'English',
-    language_ext: 'USen',
+    cookie_version: "2",
+    language: 'USen',
+    weapon_info: 'pic-and-name',
     weapon_name_hidden: false,
     sub_options_count: 6,
     special_options_count: 6,
@@ -46,7 +47,7 @@ async function loadJsonData() {
 }
 
 function getTranslation(category, entry) {
-    return language_data[settings.language_ext][category][entry];
+    return language_data[settings.language][category][entry];
 }
 
 function randomInt(min, max) {
@@ -80,7 +81,6 @@ function randomProperty(obj) {
 
 function populateSubOptions() {
     let sub_options = randomSample(subs, settings.sub_options_count, current_weapon.sub);
-    console.log(sub_options);
 
     let text = "";
     for (let option in sub_options) {
@@ -99,6 +99,20 @@ function populateSpecialOptions() {
         text += `<span id="special-option-${special_options[option]}" class="quiz-option quiz-option-open special-option" onclick="optionSelected(event)" style="background-position: -${index * option_image_size}px 0px"></span>`
     }
     document.getElementById("special-options").innerHTML = text;
+}
+
+function populateLanguageOptions() {
+    let options = "";
+    for (let index in languages) {
+        let language = languages[index];
+        if (language.ext == settings.language) {
+            options += `<option value="${language.ext}" selected>${language.name}</option>`;
+        }
+        else {
+        options += `<option value="${language.ext}">${language.name}</option>`;
+        }
+    }
+    document.getElementById("language").innerHTML = options;
 }
 
 function nextWeapon() {
@@ -149,36 +163,58 @@ function updateStreak() {
     }
     selections_made = 0;
     streak++;
-    document.getElementById("streak-tracker").innerHTML = "Streak: " + streak;
+    document.getElementById("streak-number").innerHTML = streak;
 }
 
 function toggleSettingsVisibility() {
-    //document.getElementById("settings-overlay").style.display = "block";
-    var settings_elements = document.getElementsByClassName("settings")
-    for (let i = 0; i < settings_elements.length; i++) {
-        settings_elements[i].toggleAttribute("hidden");
+    overlay = document.getElementById("settings-overlay");
+    if (overlay.style.display == "block") {
+        overlay.style.display = "none";
     }
-    let settings_button = document.getElementById("settings-button");
-    settings_button.innerHTML = (settings_button.innerHTML == "Settings") ? "Hide Settings" : "Settings";
+    else {
+        overlay.style.display = "block";
+    }
+    // var settings_elements = document.getElementsByClassName("settings")
+    // for (let i = 0; i < settings_elements.length; i++) {
+    //     settings_elements[i].toggleAttribute("hidden");
+    // }
+    // let settings_button = document.getElementById("settings-button");
+    // settings_button.innerHTML = (settings_button.innerHTML == "Settings") ? "Hide Settings" : "Settings";
+}
+
+function showSettings() {
+    document.getElementById("settings-overlay").style.display = "block";
 }
 
 function hideSettings() {
-    var settings_elements = document.getElementsByClassName("settings")
-    for (let i = 0; i < settings_elements.length; i++) {
-        settings_elements[i].setAttribute("hidden", true);
-    }
-    document.getElementById("settings-button").innerHTML = "Settings";
+    document.getElementById("settings-overlay").style.display = "none";
 }
 
 function loadSettings() {
+    document.getElementById(settings.weapon_info).checked = "checked";
     document.getElementById("sub-options-count").value = settings.sub_options_count;
     document.getElementById("special-options-count").value = settings.special_options_count;
-    //document.getElementById("sub-options-random").checked = settings.sub_options_random;
-    //document.getElementById("special-options-random").checked = settings.special_options_random;
+    updateWeaponDisplay();
 }
 
 function cookieToSettings() {
-    let cookie_settings = decodeURIComponent(document.cookie).split(';');
+    let cookie_settings = decodeURIComponent(document.cookie).split('; ');
+
+    // Don't load cookies if version is outdated
+    if (cookie_settings.length > 0) {
+        let up_to_date = false;
+        for (let i = 0; i < cookie_settings.length; i++) {
+            let setting = cookie_settings[i].split('=');
+            if (setting[0] == "cookie_version" && setting[1] == settings.cookie_version) {
+                up_to_date = true;
+            }
+        }
+        if (!up_to_date) {
+            return;
+        }
+    }
+
+    // Load cookies
     for (let i = 0; i < cookie_settings.length; i++) {
         if (cookie_settings[i].length > 0) {
             let setting = cookie_settings[i].split('=');
@@ -207,16 +243,37 @@ function changeSetting(setting_name, setting_value) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", async function() {
-    await loadJsonData();
-    cookieToSettings();
-    loadSettings();
-    nextWeapon();
+function updateText() {
+    document.querySelectorAll("[data-text]").forEach(element => {
+        element.textContent = language_data[settings.language]["UI"][element.getAttribute("data-text")];
+    });
+    document.getElementById("weapon-name").innerHTML = getTranslation('main', current_weapon.name);
+}
 
-    if (!settings.cookies_accepted) {
-        document.getElementById("cookie-notification").removeAttribute("hidden");
+function updateWeaponDisplay() {
+    let image = document.getElementById("weapon-image");
+    let name = document.getElementById("weapon-name");
+    switch (settings.weapon_info) {
+        case "pic-and-name":
+            image.removeAttribute("hidden");
+            name.removeAttribute("hidden");
+            break;
+        case "pic-only":
+            image.removeAttribute("hidden");
+            name.setAttribute("hidden", "hidden");
+            break;
+        case "name-only":
+            image.setAttribute("hidden", "hidden");
+            name.removeAttribute("hidden");
+            break;
+        default:
+            break;
     }
+    let quiz_container = document.getElementById("quiz-container");
+    quiz_container.style.bottom = `min(30vh, 100vh - ${quiz_container.offsetHeight}px)`;
+}
 
+function addListeners() {
     document.getElementById("next-button").addEventListener("click", function(e) {
         updateStreak();
         nextWeapon();
@@ -231,38 +288,52 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     document.getElementById("settings-button").addEventListener("click", toggleSettingsVisibility);
 
-    document.getElementById("weapon-name-setting").addEventListener("click", function(e) {
-        changeSetting("weapon_name_hidden", !settings.weapon_name_hidden);
-        document.getElementById("weapon-name").classList.toggle("striked");
-        document.getElementById("weapon-name").classList.toggle("settings");
+    document.getElementById("language").addEventListener("change", (event) => {
+        changeSetting("language", event.target.value);
+        updateText();
     });
 
-    document.getElementById("sub-options-count").addEventListener("input", function(e) {
-        changeSetting("sub_options_count", e.target.value);
+    document.getElementById("weapon-display").addEventListener("change", (event) => {
+        changeSetting("weapon_info", event.target.id);
+        updateWeaponDisplay();
+    });
+
+    document.getElementById("sub-options-count").addEventListener("input", (event) => {
+        changeSetting("sub_options_count", event.target.value);
         populateSubOptions();
     });
 
-    /*document.getElementById("sub-options-random").addEventListener("change", function(e) {
-        changeSetting("sub_options_random", e.target.checked);
-        populateSubOptions();
-    });*/
-
-    document.getElementById("special-options-count").addEventListener("input", function(e) {
-        changeSetting("special_options_count", e.target.value);
+    document.getElementById("special-options-count").addEventListener("input", (event) => {
+        changeSetting("special_options_count", event.target.value);
         populateSpecialOptions();
     });
 
-    /*document.getElementById("special-options-random").addEventListener("change", function(e) {
-        changeSetting("special_options_random", e.target.checked);
-        populateSpecialOptions();
-    });*/
+    document.getElementById("close-settings-button").addEventListener("click", (event) => {
+        hideSettings();
+    });
 
-    document.getElementById("cookie-accept").addEventListener("click", function(e) {
+    document.getElementById("cookie-accept").addEventListener("click", (event) => {
         changeSetting("cookies_accepted", true);
         settingsToCookie();
         document.getElementById("cookie-notification").setAttribute("hidden", "true");
     });
-    document.getElementById("cookie-decline").addEventListener("click", function(e) {
+
+    document.getElementById("cookie-decline").addEventListener("click", (event) => {
         document.getElementById("cookie-notification").setAttribute("hidden", "true");
     });
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+    await loadJsonData();
+    cookieToSettings();
+    populateLanguageOptions();
+    loadSettings();
+    nextWeapon();
+    updateText();
+
+    if (!settings.cookies_accepted) {
+        document.getElementById("cookie-notification").removeAttribute("hidden");
+    }
+
+    addListeners();
 });

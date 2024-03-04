@@ -10,19 +10,14 @@
     --button-hover-color: #b0b0b0;
     --strikethrough-color: gray;
     --footer-color: #555555;
+    --settings-window-color: lightblue;
+    --settings-text-color: black;
 }
 
 body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-input[type=checkbox] {
-    margin-left: 20px;
-    vertical-align: bottom;
-    position: relative;
-    top: -1px;
 }
 
 input[type=number] {
@@ -73,6 +68,7 @@ input[type=number] {
     color: var(--button-text-color);
     margin-left: auto;
     margin-right: auto;
+    padding: 5px;
     margin-top: 20px;
     background-color: var(--button-color);
     border-radius: 10px;
@@ -112,13 +108,17 @@ input[type=number] {
 
 .bottom-button {
     margin-left: 5px;
-    padding: 3px 5px 3px 5px;
 }
 
 #quiz-container {
+    position: fixed;
+    width: 100%;
+    max-width: 1450px;
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    bottom: min(30vh, 100vh - 605px);
 }
 
 #weapon-image {
@@ -129,15 +129,15 @@ input[type=number] {
     background-image: url("../img/main.png");
 }
 
-#weapon-name-block {
+#weapon-name {
     font-size: 2em;
     font-weight: bold;
 }
 
 #next-button {
     font-size: 1.7em;
-    padding: 5px;
-    max-width: 200px;
+    width: fit-content;
+    min-width: 8em;
 }
 
 #streak-tracker {
@@ -147,7 +147,6 @@ input[type=number] {
 
 #settings-button {
     font-size: 1.2em;
-    padding: 5px;
     max-width: 130px;
 }
 
@@ -163,10 +162,22 @@ input[type=number] {
 #settings-overlay {
     position: fixed;
     display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    background-color: var(--settings-window-color);
+    color: var(--settings-text-color);
+    width: 15%;
+    height: 80%;
+    min-width: 15em;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    padding: 15px;
+    border-radius: 25px;
+}
+
+#close-settings-button {
+    position: absolute;
+    width: max-content;
+    bottom: 2em;
+    left: 50%;
+    transform: translateX(-50%);
 }

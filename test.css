@@ -1,0 +1,22 @@
+#content {
+  position: fixed;
+  bottom: 20px; /* initial distance from bottom */
+  left: 50%; /* adjust as needed */
+  transform: translateX(-50%);
+  background-color: #f0f0f0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  min-height: 60px; /* Minimum height to ensure it never goes too high */
+}
+
+@media (max-height: 600px) {
+  #content {
+    bottom: 40px; /* adjust as needed */
+  }
+}
+
+@media (max-height: 400px) {
+  #content {
+    bottom: 60px; /* adjust as needed */
+  }
+}

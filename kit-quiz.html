@@ -12,25 +12,12 @@
   <body>
     <div id="quiz-container">
         <div id="weapon-image"></div>
-        <div id="weapon-name-block" class="block">
-          <span id="weapon-name"></span>
-          <span id="weapon-name-setting" class="settings button" hidden>
-            <i class="fa-regular fa-eye-slash"></i>
-          </span>
-        </div>
+        <div id="weapon-name"></div>
         <div id="sub-options" class="multiple-choice"></div>
-        <div id="sub-options-settings" class="settings options-settings" hidden>
-          <input id="sub-options-count" class="counter" type="number" min="1" max="14">
-          Options
-        </div>
         <div id="special-options" class="multiple-choice"></div>
-        <div id="special-options-settings" class="settings options-settings" hidden>
-          <input id="special-options-count" class="counter" type="number" min="1" max="19">
-          Options
-        </div>
-        <div id="next-button" class="button">Next Weapon</div>
-        <div id="streak-tracker">Streak: 0</div>
-        <div id="settings-button" class="button">Settings</div>
+        <div id="next-button" class="button" data-text="next-weapon">...</div>
+        <div id="streak-tracker"><span data-text="streak">...</span>: <span id="streak-number">0</span></div>
+        <div id="settings-button" class="button" data-text="settings" data-text="settings">...</div>
     </div>
     <div id="cookie-notification" class="bottom" hidden>
       This site uses cookies to remember your settings
@@ -38,7 +25,27 @@
       <span id="cookie-decline" class="bottom-button button">No Thanks!</span>
     </div>
     <div id="settings-overlay">
-      
+      <label for="language" data-text="language">...</label><br>
+      <select name="language" id="language"></select>
+      <br><br>
+      <form id="weapon-display">
+        <div data-text="weapon-display">...</div>
+        <input type="radio" id="pic-and-name" name="weapon-display"/>
+        <label for="pic-and-name" data-text="picture-and-name">...</label><br>
+        <input type="radio" id="pic-only" name="weapon-display"/>
+        <label for="pic-only" data-text="picture-only">...</label><br>
+        <input type="radio" id="name-only" name="weapon-display"/>
+        <label for="name-only" data-text="name-only">...</label>
+      </form>
+      <br>
+      <label for="sub-options-count" data-text="sub-options">...</label>
+      <input id="sub-options-count" class="counter" type="number" min="1" max="14"/><br>
+      <label for="special-options-count" data-text="special-options">...</label>
+      <input id="special-options-count" class="counter" type="number" min="1" max="19"/>
+      <br><br>
+      <!-- <label for="option-names" data-text="show-option-names"></label>
+      <input id="option-names" type="checkbox"/> -->
+      <div id="close-settings-button" class="button" data-text="close-settings">...</div>
     </div>
   </body>
 </html>
