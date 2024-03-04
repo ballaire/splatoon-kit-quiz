@@ -12,6 +12,8 @@
     --footer-color: #555555;
     --settings-window-color: lightblue;
     --settings-text-color: black;
+    --tooltip-background: black;
+    --tooltip-text: white;
 }
 
 body {
@@ -150,13 +152,13 @@ input[type=number] {
     max-width: 130px;
 }
 
-#weapon-name-setting {
-    font-size: 0.6em;
-    margin-left: 0.5em;
+#tooltip {
     position: absolute;
-    left: 100%;
-    bottom: 10%;
-    padding: 0px 3px 0px 3px;
+    background-color: var(--tooltip-background);
+    color: var(--tooltip-text);
+    padding: 4px 10px 5px 10px;
+    border-radius: 10px;
+    z-index: 2;
 }
 
 #settings-overlay {

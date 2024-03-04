@@ -10,6 +10,7 @@ var settings = {
     special_options_count: 6,
     options_random_order: false,
     all_weapons_before_repeat: true,
+    show_option_names: false,
     cookies_accepted: false
 };
 
@@ -138,7 +139,7 @@ function optionSelected(e) {
     let selection = e.target.id;
     let type = selection.split("-", 1)
     if (type == "sub") {
-        var correct_answer = `sub-option-${current_weapon.sub}`;
+        var correct_answer = `${type}-option-${current_weapon.sub}`;
     }
     else {
         var correct_answer = `special-option-${current_weapon.special}`;
@@ -194,6 +195,7 @@ function loadSettings() {
     document.getElementById(settings.weapon_info).checked = "checked";
     document.getElementById("sub-options-count").value = settings.sub_options_count;
     document.getElementById("special-options-count").value = settings.special_options_count;
+    document.getElementById("option-names").checked = settings.show_option_names;
     updateWeaponDisplay();
 }
 
@@ -275,13 +277,13 @@ function updateWeaponDisplay() {
 }
 
 function addListeners() {
-    document.getElementById("next-button").addEventListener("click", function(e) {
+    document.getElementById("next-button").addEventListener("click", (event) => {
         updateStreak();
         nextWeapon();
     });
 
-    document.addEventListener("keyup", function(e) {
-        if (e.code == "Space") {
+    document.addEventListener("keyup", (event) => {
+        if (event.code == "Space") {
             updateStreak();
             nextWeapon();
         }
@@ -309,6 +311,10 @@ function addListeners() {
         populateSpecialOptions();
     });
 
+    document.getElementById("option-names").addEventListener("change", (event) => {
+        changeSetting("show_option_names", event.target.checked);
+    });
+
     document.getElementById("close-settings-button").addEventListener("click", (event) => {
         hideSettings();
     });
@@ -322,6 +328,21 @@ function addListeners() {
     document.getElementById("cookie-decline").addEventListener("click", (event) => {
         document.getElementById("cookie-notification").setAttribute("hidden", "true");
     });
+
+    const tooltip = document.getElementById('tooltip');
+    window.onmousemove = (event) => {
+        if (settings.show_option_names && event.target.classList.contains('quiz-option')) {
+            let option_name = event.target.id.split('-').pop();
+            tooltip.innerHTML = language_data[settings.language][event.target.classList.contains('sub-option') ? 'sub' : 'special'][option_name];
+            let offset = tooltip.parentElement.getBoundingClientRect();
+            tooltip.style.top = (event.clientY - offset.top + 15) + 'px';
+            tooltip.style.left = (event.clientX - offset.left + 15) + 'px';
+            tooltip.removeAttribute('hidden');
+        }
+        else {
+            tooltip.setAttribute('hidden', 'hidden');
+        }
+    };
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
